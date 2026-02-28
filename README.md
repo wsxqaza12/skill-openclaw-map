@@ -1,24 +1,33 @@
 # skill-openclaw-map
 
-An [OpenClaw](https://openclaw.ai) skill that gives coding agents (Claude Code, Cursor, Windsurf, etc.) a map of the OpenClaw environment — so they know where config, logs, cron jobs, sessions, skills, and docs live without having to explore from scratch.
+An [OpenClaw](https://openclaw.ai) skill that gives coding agents a map of the OpenClaw environment — so they know where config, logs, cron jobs, sessions, skills, and docs live without having to explore from scratch.
 
 ## Who is this for
 
-Anyone connecting a coding agent to OpenClaw via the [ACP bridge](https://docs.openclaw.ai/cli/acp). When the agent needs to modify or debug OpenClaw, this skill tells it where everything is.
+Anyone using a coding agent (GitHub Copilot, Claude Code, Cursor, Windsurf, etc.) to modify or debug an OpenClaw installation. This skill is a static knowledge pack — install it into your coding agent and it instantly knows the full OpenClaw file structure.
 
 ## Install
 
-```bash
-# Option 1: clone directly into skills dir
-git clone https://github.com/<owner>/skill-openclaw-map ~/.openclaw/skills/openclaw-map
+1. **Clone this repo**
 
-# Option 2: copy skill files only
-mkdir -p ~/.openclaw/skills/openclaw-map
-cp SKILL.md ~/.openclaw/skills/openclaw-map/
-cp -r references/ ~/.openclaw/skills/openclaw-map/
-```
+   ```bash
+   git clone https://github.com/wsxqaza12/skill-openclaw-map
+   ```
 
-Restart your OpenClaw session to pick it up.
+2. **Add the skill to your coding agent**
+
+   Each agent has its own way to load skills / custom instructions. Place or reference this skill folder according to your agent's docs:
+
+   | Agent | Docs |
+   |---|---|
+   | GitHub Copilot (VS Code) | [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot) |
+   | Claude Code | [Custom Instructions](https://docs.anthropic.com/en/docs/claude-code/settings#settings-files-and-format) |
+   | Cursor | [Rules](https://docs.cursor.com/context/rules-for-ai) |
+   | Windsurf | [Rules](https://docs.windsurf.com/windsurf/customize#rules) |
+
+3. **Open `~/.openclaw/` in your coding agent and start working**
+
+   用 coding agent 打開 `~/.openclaw/`，agent 會根據 skill 提供的地圖知道所有東西在哪。
 
 ## What it covers
 
@@ -28,7 +37,6 @@ Restart your OpenClaw session to pick it up.
 - Cron job format and CLI commands
 - Skills loading priority
 - Gateway daemon management
-- ACP bridge setup
 - All log file locations
 - How to find local OpenClaw docs on any OS
 
