@@ -1,45 +1,52 @@
 # skill-openclaw-map
 
-An [OpenClaw](https://openclaw.ai) skill that gives coding agents a map of the OpenClaw environment — so they know where config, logs, cron jobs, sessions, skills, and docs live without having to explore from scratch.
+**English** | [繁體中文](README.zh-TW.md)
+
+A skill that gives coding agents a complete map of the [OpenClaw](https://openclaw.ai) environment, including config, logs, cron jobs, sessions, skills, and docs, so they can navigate and modify it without exploring from scratch.
 
 ## Who is this for
 
-Anyone using a coding agent (GitHub Copilot, Claude Code, Cursor, Windsurf, etc.) to modify or debug an OpenClaw installation. This skill is a static knowledge pack — install it into your coding agent and it instantly knows the full OpenClaw file structure.
+Anyone using a coding agent (GitHub Copilot, Claude Code, Cursor, Codex, etc.) to work on an OpenClaw installation. Install this skill once, and your agent instantly knows the entire file structure.
 
 ## Install
 
-1. **Clone this repo**
+This repo follows the [Agent Skills](https://agentskills.io/) open standard.
+
+1. **`cd` into the OpenClaw home directory**
 
    ```bash
-   git clone https://github.com/wsxqaza12/skill-openclaw-map
+   cd ~/.openclaw
    ```
 
-2. **Add the skill to your coding agent**
+2. **Clone this repo into your agent's project-level skills directory**
 
-   Each agent has its own way to load skills / custom instructions. Place or reference this skill folder according to your agent's docs:
-
-   | Agent | Docs |
+   | Agent | Command |
    |---|---|
-   | GitHub Copilot (VS Code) | [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot) |
-   | Claude Code | [Custom Instructions](https://docs.anthropic.com/en/docs/claude-code/settings#settings-files-and-format) |
-   | Cursor | [Rules](https://docs.cursor.com/context/rules-for-ai) |
-   | Windsurf | [Rules](https://docs.windsurf.com/windsurf/customize#rules) |
+   | Claude Code | `git clone https://github.com/wsxqaza12/skill-openclaw-map .claude/skills/openclaw-map` |
+   | Cursor | `git clone https://github.com/wsxqaza12/skill-openclaw-map .cursor/skills/openclaw-map` |
+   | Codex | `git clone https://github.com/wsxqaza12/skill-openclaw-map .codex/skills/openclaw-map` |
+   | GitHub Copilot | [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot) |
 
 3. **Open `~/.openclaw/` in your coding agent and start working**
 
-   用 coding agent 打開 `~/.openclaw/`，agent 會根據 skill 提供的地圖知道所有東西在哪。
+   Point your coding agent at `~/.openclaw/`. It will automatically discover the skill and use it to locate everything it needs.
 
 ## What it covers
 
 - `~/.openclaw/` directory layout
-- Agent workspace + bootstrap files (`AGENTS.md`, `SOUL.md`, etc.)
+- Agent workspace and bootstrap files (`AGENTS.md`, `SOUL.md`, etc.)
 - Session transcript paths
 - Cron job format and CLI commands
 - Skills loading priority
 - Gateway daemon management
-- All log file locations
-- How to find local OpenClaw docs on any OS
+- Log file locations
+- How to find bundled OpenClaw docs on any OS
 
 ## Maintenance
 
-Content is static. When OpenClaw ships breaking changes to its file structure, update `references/environment.md` and open a PR.
+Content is static. A weekly [GitHub Action](.github/workflows/check-drift.yml) checks for structural changes in the latest OpenClaw release and opens an issue when drift is detected.
+
+To update:
+1. Update `references/environment.md`
+2. Run `scripts/update-baseline.sh` to refresh the baseline
+3. Open a PR
