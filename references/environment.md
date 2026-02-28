@@ -29,10 +29,6 @@ Online mirror: https://docs.openclaw.ai
 ~/.openclaw/
 ├── openclaw.json          # Main config
 ├── openclaw.json.bak      # Auto-backup
-├── logs/
-│   ├── gateway.log        # Gateway stdout (primary runtime log)
-│   ├── gateway.err.log    # Gateway stderr
-│   └── commands.log       # CLI command history
 ├── cron/
 │   ├── jobs.json          # Cron job definitions
 │   └── runs/              # Per-job run logs (JSONL, named by job ID)
@@ -47,7 +43,7 @@ Online mirror: https://docs.openclaw.ai
 ## Agent workspace
 
 Default: `~/.openclaw/workspace`
-Override via `agents.defaults.workspace` in `openclaw.json`.
+Override via `agent.workspace` in `openclaw.json`.
 
 Bootstrap files (injected into agent context every session):
 - `AGENTS.md` — operating instructions + memory
@@ -57,11 +53,13 @@ Bootstrap files (injected into agent context every session):
 - `USER.md` — user profile
 - `BOOTSTRAP.md` — one-time first-run ritual (agent deletes after)
 
-Common conventions:
+Optional workspace files:
+- `HEARTBEAT.md` — periodic heartbeat check tasks
+- `BOOT.md` — startup checklist executed on gateway restart (keep short)
 - `MEMORY.md` — long-term curated memory
-- `HEARTBEAT.md` — periodic check tasks
 - `memory/YYYY-MM-DD.md` — daily session logs
 - `skills/` — workspace-scoped skills (highest priority)
+- `canvas/` — Canvas UI files for node displays
 - `state/` — runtime state files
 
 ## Sessions
@@ -76,23 +74,42 @@ Main session: agentId = `main`
 
 Definitions: `~/.openclaw/cron/jobs.json`
 
+One-shot (main session, system event):
+
 ```json
 {
-  "id": "<uuid>",
-  "label": "human-readable label",
-  "schedule": { "kind": "cron", "expr": "30 7 * * *", "tz": "Asia/Taipei" },
-  "task": "prompt to send to the agent",
-  "agentId": "main",
-  "model": "anthropic/claude-sonnet-4-6"
+  "name": "Reminder",
+  "schedule": { "kind": "at", "at": "2026-02-01T16:00:00Z" },
+  "sessionTarget": "main",
+  "wakeMode": "now",
+  "payload": { "kind": "systemEvent", "text": "Reminder text" },
+  "deleteAfterRun": true
 }
 ```
+
+Recurring (isolated session, with delivery):
+
+```json
+{
+  "name": "Morning brief",
+  "schedule": { "kind": "cron", "expr": "0 7 * * *", "tz": "America/Los_Angeles" },
+  "sessionTarget": "isolated",
+  "wakeMode": "next-heartbeat",
+  "payload": { "kind": "agentTurn", "message": "Summarize overnight updates." },
+  "delivery": { "mode": "announce", "channel": "slack", "to": "channel:C1234567890" }
+}
+```
+
+Schedule kinds: `at` (one-shot ISO 8601) · `every` (interval ms) · `cron` (5-field expr + optional tz)
+Session targets: `main` (system event via heartbeat) · `isolated` (dedicated agent turn)
+Delivery modes: `announce` · `webhook` · `none` (default for isolated: `announce`)
 
 Run logs: `~/.openclaw/cron/runs/<jobId>.jsonl`
 
 ```bash
 openclaw cron list
-openclaw cron add --schedule "0 9 * * *" --task "Check emails"
-openclaw cron remove <id>
+openclaw cron add --name "Check emails" --cron "0 9 * * *" --session main --system-event "Check emails"
+openclaw cron rm <jobId>
 ```
 
 ## Skills loading priority
@@ -110,14 +127,14 @@ openclaw gateway status|start|stop|restart
 ```
 
 Default port: `18789`
-Log: `~/.openclaw/logs/gateway.log`
+Log: `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (rolling daily, JSON lines)
 Config: `openclaw.json` → `gateway` key
 
 ## openclaw.json top-level keys
 
-`agents` · `tools` · `channels` · `skills` · `gateway` · `auth` · `hooks` · `bindings`
+`agent` · `agents` · `models` · `routing` · `channels` · `messages` · `session` · `tools` · `browser` · `skills` · `audio` · `talk` · `gateway` · `hooks` · `cron` · `ui` · `logging` · `identity` · `bindings` · `discovery` · `plugins` · `env` · `web`
 
-Edit interactively: `openclaw configure` (restart gateway to apply changes)
+Edit interactively: `openclaw configure` (most changes hot-reload automatically)
 
 ## ACP bridge (IDE integration)
 
@@ -133,11 +150,8 @@ openclaw acp --session agent:main:main    # attach to specific session
 
 | What | Where |
 |---|---|
-| Gateway runtime | `~/.openclaw/logs/gateway.log` |
-| Gateway errors | `~/.openclaw/logs/gateway.err.log` |
-| CLI commands | `~/.openclaw/logs/commands.log` |
+| Gateway runtime | `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (rolling daily, JSON lines) |
 | Cron runs | `~/.openclaw/cron/runs/<jobId>.jsonl` |
-| Config audit | `~/.openclaw/logs/config-audit.jsonl` |
 | Sessions | `~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl` |
 
 ## CLI quick reference

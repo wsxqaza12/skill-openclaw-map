@@ -1,6 +1,6 @@
-# skill-openclaw-navigate
+# skill-openclaw-map
 
-An [OpenClaw](https://openclaw.ai) skill that gives coding agents (Claude Code, Cursor, Windsurf, etc.) a navigation map of the OpenClaw environment — so they know where config, logs, cron jobs, sessions, skills, and docs live without having to explore from scratch.
+An [OpenClaw](https://openclaw.ai) skill that gives coding agents (Claude Code, Cursor, Windsurf, etc.) a map of the OpenClaw environment — so they know where config, logs, cron jobs, sessions, skills, and docs live without having to explore from scratch.
 
 ## Who is this for
 
@@ -9,7 +9,13 @@ Anyone connecting a coding agent to OpenClaw via the [ACP bridge](https://docs.o
 ## Install
 
 ```bash
-cp -r openclaw-navigate/ ~/.openclaw/skills/
+# Option 1: clone directly into skills dir
+git clone https://github.com/<owner>/skill-openclaw-map ~/.openclaw/skills/openclaw-map
+
+# Option 2: copy skill files only
+mkdir -p ~/.openclaw/skills/openclaw-map
+cp SKILL.md ~/.openclaw/skills/openclaw-map/
+cp -r references/ ~/.openclaw/skills/openclaw-map/
 ```
 
 Restart your OpenClaw session to pick it up.
@@ -28,4 +34,4 @@ Restart your OpenClaw session to pick it up.
 
 ## Maintenance
 
-Content is static. When OpenClaw ships breaking changes to its file structure, update `openclaw-navigate/references/environment.md` and open a PR.
+Content is static. When OpenClaw ships breaking changes to its file structure, update `references/environment.md` and open a PR.

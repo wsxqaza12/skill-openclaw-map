@@ -1,9 +1,9 @@
 ---
-name: openclaw-env
+name: openclaw-map
 description: OpenClaw environment map for coding agents (Claude Code, Cursor, Windsurf, etc.). Use when a coding agent needs to navigate or modify an OpenClaw installation — where config, logs, cron jobs, sessions, skills, workspaces, and docs live. Triggers on questions like "where are cron jobs stored?", "where are session logs?", "how does the workspace work?", "where is the OpenClaw config?", or any task that requires understanding the OpenClaw file system structure.
 ---
 
-# OpenClaw Environment
+# OpenClaw Map
 
 Full reference: [references/environment.md](references/environment.md)
 
@@ -24,7 +24,7 @@ Read it before navigating the file system. It covers:
 | What | Where |
 |---|---|
 | Config | `~/.openclaw/openclaw.json` |
-| Gateway log | `~/.openclaw/logs/gateway.log` |
+| Gateway log | `/tmp/openclaw/openclaw-YYYY-MM-DD.log` |
 | Cron jobs | `~/.openclaw/cron/jobs.json` |
 | Sessions | `~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl` |
 | Default workspace | `~/.openclaw/workspace` |
@@ -34,10 +34,10 @@ Read it before navigating the file system. It covers:
 
 ## Common tasks
 
-**Modify config** → edit `~/.openclaw/openclaw.json`, then `openclaw gateway restart`
+**Modify config** → edit `~/.openclaw/openclaw.json` (hot-reloads automatically; only `gateway.*` changes need restart)
 
-**Add cron job** → `openclaw cron add --schedule "..." --task "..."`
+**Add cron job** → `openclaw cron add --name "..." --cron "..." --session main --system-event "..."`
 
-**Install a skill** → drop `.skill` file into `~/.openclaw/skills/`
+**Install a skill** → drop skill folder (containing `SKILL.md`) into `~/.openclaw/skills/`
 
-**Diagnose issues** → `openclaw doctor` or `tail -f ~/.openclaw/logs/gateway.log`
+**Diagnose issues** → `openclaw doctor` or `openclaw logs --follow`

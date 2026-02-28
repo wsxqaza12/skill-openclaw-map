@@ -1,0 +1,15 @@
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Copilot / AI agent workspace instructions
+.github/
+
+# OS
+Thumbs.db
