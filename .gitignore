@@ -9,7 +9,7 @@
 .DS_Store
 
 # Copilot / AI agent workspace instructions
-.github/
+.github/copilot-instructions.md
 
 # OS
 Thumbs.db

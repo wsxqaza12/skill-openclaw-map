@@ -1,0 +1,123 @@
+name: Check OpenClaw drift
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Every Monday 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install OpenClaw
+        run: npm install -g openclaw@latest
+
+      - name: Snapshot current structure
+        run: |
+          mkdir -p /tmp/snapshot
+
+          # OpenClaw version
+          npx openclaw --version > /tmp/snapshot/version.txt 2>/dev/null || echo "unknown" > /tmp/snapshot/version.txt
+
+          # CLI subcommands
+          npx openclaw --help 2>/dev/null | grep -E '^\s+\w' | awk '{print $1}' | sort > /tmp/snapshot/cli-commands.txt
+
+          # Bundled docs file tree
+          DOCS_DIR="$(npm root -g)/openclaw/docs"
+          if [ -d "$DOCS_DIR" ]; then
+            find "$DOCS_DIR" -name '*.md' | sed "s|$DOCS_DIR/||" | sort > /tmp/snapshot/docs-tree.txt
+          else
+            echo "DOCS_DIR_NOT_FOUND" > /tmp/snapshot/docs-tree.txt
+          fi
+
+          # Bundled skills list
+          SKILLS_DIR="$(npm root -g)/openclaw/skills"
+          if [ -d "$SKILLS_DIR" ]; then
+            ls "$SKILLS_DIR" | sort > /tmp/snapshot/bundled-skills.txt
+          else
+            echo "SKILLS_DIR_NOT_FOUND" > /tmp/snapshot/bundled-skills.txt
+          fi
+
+          # openclaw.json top-level config keys (extract from schema if available)
+          node -e "
+            try {
+              const base = require.resolve('openclaw/package.json').replace('/package.json', '');
+              const fs = require('fs');
+              const candidates = [
+                base + '/lib/config/schema.js',
+                base + '/dist/config/schema.js',
+                base + '/src/config/schema.js'
+              ];
+              for (const c of candidates) {
+                if (fs.existsSync(c)) {
+                  const m = require(c);
+                  const keys = Object.keys(m.properties || m.default?.properties || m).sort();
+                  console.log(keys.join('\n'));
+                  process.exit(0);
+                }
+              }
+              console.log('SCHEMA_NOT_FOUND');
+            } catch (e) {
+              console.log('SCHEMA_EXTRACT_FAILED');
+            }
+          " > /tmp/snapshot/config-keys.txt
+
+      - name: Compare with baseline
+        id: diff
+        run: |
+          CHANGED=false
+          DETAILS=""
+          for f in .baseline/*.txt; do
+            name=$(basename "$f")
+            snap="/tmp/snapshot/$name"
+            if [ -f "$snap" ]; then
+              RESULT=$(diff "$f" "$snap" 2>&1) || true
+              if [ -n "$RESULT" ]; then
+                echo "::warning::$name has changed"
+                DETAILS="$DETAILS\n### $name\n\`\`\`diff\n$RESULT\n\`\`\`\n"
+                CHANGED=true
+              fi
+            fi
+          done
+          echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+
+          # Save details for issue body
+          if [ "$CHANGED" = "true" ]; then
+            printf "$DETAILS" > /tmp/drift-details.md
+          fi
+
+      - name: Check for existing open issue
+        if: steps.diff.outputs.changed == 'true'
+        id: existing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'drift',
+              per_page: 1
+            });
+            core.setOutput('exists', issues.data.length > 0 ? 'true' : 'false');
+
+      - name: Open issue if drift detected
+        if: steps.diff.outputs.changed == 'true' && steps.existing.outputs.exists == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const details = fs.readFileSync('/tmp/drift-details.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'OpenClaw structure drift detected',
+              body: `Weekly check found differences between the current OpenClaw version and our baseline.\n\nPlease review and update \`references/environment.md\`, then run \`scripts/update-baseline.sh\` to refresh the baseline.\n\n## Changes\n\n${details}`,
+              labels: ['drift']
+            });
