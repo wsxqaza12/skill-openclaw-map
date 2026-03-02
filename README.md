@@ -1,6 +1,10 @@
 # skill-openclaw-map
 
-**English** | [繁體中文](README.zh-TW.md)
+**English** | [繁體中文](docs/README.zh-TW.md)
+
+<p align="center">
+  <img src="assets/banner.jpg" alt="skill-openclaw-map banner" width="600">
+</p>
 
 A skill that gives coding agents a complete map of the [OpenClaw](https://openclaw.ai) environment, including config, logs, cron jobs, sessions, skills, and docs, so they can navigate and modify it without exploring from scratch.
 
@@ -25,6 +29,7 @@ This repo follows the [Agent Skills](https://agentskills.io/) open standard.
    | Claude Code | `git clone https://github.com/wsxqaza12/skill-openclaw-map .claude/skills/openclaw-map` |
    | Cursor | `git clone https://github.com/wsxqaza12/skill-openclaw-map .cursor/skills/openclaw-map` |
    | Codex | `git clone https://github.com/wsxqaza12/skill-openclaw-map .codex/skills/openclaw-map` |
+   | AntiGravity | `git clone https://github.com/wsxqaza12/skill-openclaw-map .agent/skills/openclaw-map` |
    | GitHub Copilot | [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot) |
 
 3. **Open `~/.openclaw/` in your coding agent and start working**

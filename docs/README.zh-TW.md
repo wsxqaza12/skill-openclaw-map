@@ -1,6 +1,10 @@
 # skill-openclaw-map
 
-[English](README.md) | **繁體中文**
+[English](../README.md) | **繁體中文**
+
+<p align="center">
+  <img src="../assets/banner.jpg" alt="skill-openclaw-map banner" width="600">
+</p>
 
 給 coding agent 一張完整的 [OpenClaw](https://openclaw.ai) 環境地圖，涵蓋 config、log、cron job、session、skill、文件等，讓它不用從頭摸索就能直接上手修改。
 
@@ -25,6 +29,7 @@
    | Claude Code | `git clone https://github.com/wsxqaza12/skill-openclaw-map .claude/skills/openclaw-map` |
    | Cursor | `git clone https://github.com/wsxqaza12/skill-openclaw-map .cursor/skills/openclaw-map` |
    | Codex | `git clone https://github.com/wsxqaza12/skill-openclaw-map .codex/skills/openclaw-map` |
+   | AntiGravity | `git clone https://github.com/wsxqaza12/skill-openclaw-map .agent/skills/openclaw-map` |
    | GitHub Copilot | [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot) |
 
 3. **用 coding agent 打開 `~/.openclaw/` 開始工作**
