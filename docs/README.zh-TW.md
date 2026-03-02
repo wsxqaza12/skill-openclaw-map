@@ -1,12 +1,23 @@
-# skill-openclaw-map
-
-[English](../README.md) | **繁體中文**
-
 <p align="center">
   <img src="../assets/banner.jpg" alt="skill-openclaw-map banner" width="600">
 </p>
 
-給 coding agent 一張完整的 [OpenClaw](https://openclaw.ai) 環境地圖，涵蓋 config、log、cron job、session、skill、文件等，讓它不用從頭摸索就能直接上手修改。
+<h1 align="center">skill-openclaw-map</h1>
+
+<p align="center">
+  <strong>給你的 coding agent 一張完整的 <a href="https://openclaw.ai">OpenClaw</a> 環境地圖。</strong><br>
+  Config · Log · Cron Job · Session · Skill · 文件 — 不用從頭摸索。
+</p>
+
+<p align="center">
+  <a href="https://agentskills.io"><img src="https://img.shields.io/badge/Agent_Skills-compatible-blue?style=flat-square" alt="Agent Skills compatible"></a>
+  <a href="https://github.com/wsxqaza12/skill-openclaw-map/actions/workflows/check-drift.yml"><img src="https://img.shields.io/github/actions/workflow/status/wsxqaza12/skill-openclaw-map/check-drift.yml?style=flat-square&label=drift%20check" alt="Drift Check"></a>
+  <a href="https://github.com/wsxqaza12/skill-openclaw-map/stargazers"><img src="https://img.shields.io/github/stars/wsxqaza12/skill-openclaw-map?style=flat-square" alt="Stars"></a>
+</p>
+
+<p align="center">
+  <a href="../README.md">English</a> | <strong>繁體中文</strong>
+</p>
 
 ## 適用對象
 

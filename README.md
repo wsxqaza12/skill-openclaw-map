@@ -1,12 +1,23 @@
-# skill-openclaw-map
-
-**English** | [繁體中文](docs/README.zh-TW.md)
-
 <p align="center">
   <img src="assets/banner.jpg" alt="skill-openclaw-map banner" width="600">
 </p>
 
-A skill that gives coding agents a complete map of the [OpenClaw](https://openclaw.ai) environment, including config, logs, cron jobs, sessions, skills, and docs, so they can navigate and modify it without exploring from scratch.
+<h1 align="center">skill-openclaw-map</h1>
+
+<p align="center">
+  <strong>Give your coding agent a complete map of the <a href="https://openclaw.ai">OpenClaw</a> environment.</strong><br>
+  Config · Logs · Cron Jobs · Sessions · Skills · Docs — no exploring from scratch.
+</p>
+
+<p align="center">
+  <a href="https://agentskills.io"><img src="https://img.shields.io/badge/Agent_Skills-compatible-blue?style=flat-square" alt="Agent Skills compatible"></a>
+  <a href="https://github.com/wsxqaza12/skill-openclaw-map/actions/workflows/check-drift.yml"><img src="https://img.shields.io/github/actions/workflow/status/wsxqaza12/skill-openclaw-map/check-drift.yml?style=flat-square&label=drift%20check" alt="Drift Check"></a>
+  <a href="https://github.com/wsxqaza12/skill-openclaw-map/stargazers"><img src="https://img.shields.io/github/stars/wsxqaza12/skill-openclaw-map?style=flat-square" alt="Stars"></a>
+</p>
+
+<p align="center">
+  <strong>English</strong> | <a href="docs/README.zh-TW.md">繁體中文</a>
+</p>
 
 ## Who is this for
 
